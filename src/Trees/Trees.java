@@ -35,6 +35,16 @@ class BinaryTree
         {
             
             Node returned = tree2listrecursion(node.left);
+            returned.right = node;            
+            if (node.right != null)
+            {
+                Node right_returned = tree2listrecursion(node.right);
+                node.right = right_returned;
+                node = right_returned;
+            }
+            return node;
+            
+            
             
             
         }
