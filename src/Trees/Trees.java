@@ -27,44 +27,62 @@ class Node
 
 class BinaryTree
 {
-    Node root;
+    static Node root;
+    static Node head;
+    static int flag = 0;
     
-    Node tree2listrecursion(Node node)
+    static Node tree2listrecursion(Node node)
     {
+        try{
+       
         if (node.left != null)
-        {
-            
-            Node returned = tree2listrecursion(node.left);
-            returned.right = node;            
+        {            
+            Node left_returned = tree2listrecursion(node.left);
+            if(flag == 0)
+            {head = left_returned;flag=1;}
+            //System.out.println("node");
+            left_returned.right = node;
+            node.left = left_returned;
+            //returned.right = node;            
+            Node right_returned=null;
             if (node.right != null)
             {
-                Node right_returned = tree2listrecursion(node.right);
+                right_returned = tree2listrecursion(node.right);
+                //System.out.println("node");
                 node.right = right_returned;
-                node = right_returned;
+                right_returned.left = node;
+                //System.out.println("The value returned "+right_returned.data);
+                
             }
-            return node;
-            
-            
-            
+            if(right_returned == null){return node;}
+            else{return right_returned;}
             
         }
         else if (node.right != null)
-        {            
-            tree2listrecursion(node.right);           
+        {         
+            Node right_returned = tree2listrecursion(node.right);
+            //System.out.println("node");
+            right_returned.right = node;
+            node.left = right_returned;
+            Node left_returned = null;
+            if (node.right != null)
+            {
+                right_returned = tree2listrecursion(node.right);
+                System.out.println("node");
+                node.right = right_returned;
+                right_returned.left = node;
+                
+            }
+            //System.out.println("The value returned "+left_returned.data);
+            return left_returned;
         }
+        //System.out.println("The value returned "+node.data);
         
+    }catch(Exception e){}
         return node;
     }
             
             
-            
-            
-    
-    
-    void tree2list()
-    {
-                
-    }
 }
 
 
@@ -76,7 +94,7 @@ public class Trees {
    defined inside LinkedList class shown above */
     
     
-    public static void main()
+    public static void main(String[] args)
     {
         BinaryTree tree = new BinaryTree();
         tree.root = new Node(10);
@@ -85,6 +103,17 @@ public class Trees {
         tree.root.left.left = new Node(25);
         tree.root.left.right = new Node(30);
         tree.root.right.left = new Node(36);
+        //tree.root.left.right.left = new Node(8);
+        //tree.root.left.right.left.left = new Node(5);
+        //tree.root.left.right.left.right = new Node(1);
+        BinaryTree.tree2listrecursion(tree.root);
+        
+        while(true)
+        {
+            System.out.println(BinaryTree.head.data+" ");
+            BinaryTree.head = BinaryTree.head.right;
+            
+        }
         
     }
 
