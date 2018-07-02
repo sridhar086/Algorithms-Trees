@@ -190,6 +190,25 @@ class BinaryTree
         
     }
 
+    public int findSecondMinimumValue(Node root) {
+        
+        min = root.data;
+        
+        findmin(root);
+        if(max == 0) max = min;
+        minmax = max;
+        System.out.println("The min and max values are "+min+ " "+max);
+        findsecondmin(root);
+        System.out.println("The min and second min "+min+""+minmax);
+        if(minmax == min)
+        return  -1;
+        else
+        return minmax;
+
+        
+            
+    }
+
 }
 public class Trees {
 
@@ -210,8 +229,8 @@ public class Trees {
         tree.check_balancing(tree.root);
         System.out.println("The status of balancing tree is "+tree.balance_check_flag);
         
-        tree.findmin(tree.root);
-        tree.findsecondmin(tree.root);
+        
+        tree.findSecondMinimumValue(tree.root);  //only for a special case tree that has both child nodes for a node
         System.out.println("The min and max are "+tree.min+" "+tree.max);
         System.out.println("The second minimum is "+tree.minmax);
         
