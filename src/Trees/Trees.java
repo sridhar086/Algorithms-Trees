@@ -122,6 +122,74 @@ class BinaryTree
 
 
 
+    
+    
+    //This is to find the second minimum in a special tree that contains two childs for everynode.
+    int min = 0;
+    int max = 0;
+    int minmax = 0;
+    
+    public int findmin(Node root)
+    {
+        if (root.left==null && root.right==null)
+            return 0;
+        else
+        {
+            int val1 = root.left.data;
+            int val2 = root.right.data;
+            //System.out.println("the values are "+val1+" "+val2);
+            if (val1<val2)
+            {
+                if(val1<min) min = val1;                
+                if(val2>max) max = val2;                
+            }
+            else
+            {
+                if(val2<min) min = val2;            
+                if(val1>max) max = val1;
+            }           
+            findmin(root.left);
+            findmin(root.right);
+        }
+        return 0;
+    }
+    
+    public int findsecondmin(Node root)
+    {
+        //System.out.println("in here");
+        if (root.left==null && root.right==null)
+            return 0;
+        else
+        {
+            int val1 = root.left.data;
+            int val2 = root.right.data;
+            //System.out.println("the values are "+val1+" "+val2);
+            if(val1 > min)
+            {
+                if(val1<minmax)
+                {
+                    minmax = val1;
+                }
+
+            }
+            if(val2 > min)
+            {
+                //System.out.println("yes this should work");
+                if(val2<minmax)
+                {
+                   
+                    minmax = val2;
+                }
+                
+            }
+            findsecondmin(root.left);
+            findsecondmin(root.right);
+        }
+        return 0;
+        
+        
+    }
+
 }
 public class Trees {
 
@@ -141,6 +209,11 @@ public class Trees {
         
         tree.check_balancing(tree.root);
         System.out.println("The status of balancing tree is "+tree.balance_check_flag);
+        
+        tree.findmin(tree.root);
+        tree.findsecondmin(tree.root);
+        System.out.println("The min and max are "+tree.min+" "+tree.max);
+        System.out.println("The second minimum is "+tree.minmax);
         
         tree.btree2dll(tree.root);
         try{
