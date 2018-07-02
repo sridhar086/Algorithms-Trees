@@ -10,7 +10,22 @@ package Trees;
  * @author sridhar
  */
 
-// Linked List Class
+// Binary Tree to doubly linked list using recursion and O(1) space complexity
+//Sample binary tree chosen here
+
+/*
+                                                10
+                                            /        \
+                                        12              15
+                                      /    \           / 
+                                    25      30        36
+                                          /             \
+                                         8               244
+                                       /   \
+                                      5     1
+
+*/
+
 
 class Node
 {
@@ -22,78 +37,94 @@ class Node
         data = item;
         left = right = null;
     }
-
-}  
+}
 
 class BinaryTree
 {
     static Node root;
     static Node head;
     static int flag = 0;
+    static int balance_check_flag = 0;
     
-    static Node tree2listrecursion(Node node)
+    Node btree2dll(Node node)
     {
         try{
-       
+
+        Node carry = null;
         if (node.left != null)
         {            
-            Node left_returned = tree2listrecursion(node.left);
+            Node left_returned = btree2dll(node.left);
             if(flag == 0)
-            {head = left_returned;flag=1;}
-            //System.out.println("node");
+            {head = left_returned;flag=1;}            
             left_returned.right = node;
-            node.left = left_returned;
-            //returned.right = node;            
-            Node right_returned=null;
-            if (node.right != null)
-            {
-                right_returned = tree2listrecursion(node.right);
-                //System.out.println("node");
-                node.right = right_returned;
-                right_returned.left = node;
-                //System.out.println("The value returned "+right_returned.data);
-                
-            }
-            if(right_returned == null){return node;}
-            else{return right_returned;}
-            
+            node.left = left_returned;            
+            carry = node;
+
         }
-        else if (node.right != null)
+        if (node.right != null)
         {         
-            Node right_returned = tree2listrecursion(node.right);
-            //System.out.println("node");
-            right_returned.right = node;
-            node.left = right_returned;
-            Node left_returned = null;
-            if (node.right != null)
+            Node temp = btree2dll(node.right);
+            Node right_returned = temp;
+            Node attach;
+            while(true)
             {
-                right_returned = tree2listrecursion(node.right);
-                System.out.println("node");
-                node.right = right_returned;
-                right_returned.left = node;
-                
+                //System.out.println("in here "+temp.data);
+                if(temp.left == null)
+                {
+                attach = temp;break;
+                }
+                else if (temp.left.left == null)
+                {
+                    attach = temp.left;                    
+                    break;
+                }
+                else{temp = temp.left;}                
             }
-            //System.out.println("The value returned "+left_returned.data);
-            return left_returned;
+            //System.out.println("***");
+            node.right = attach;
+            attach.left = node;
+            carry = right_returned;
         }
-        //System.out.println("The value returned "+node.data);
+        if(node.right!=null || node.left!=null){return carry;}
+
         
-    }catch(Exception e){}
+    }catch(Exception e){System.out.println("Exception here "+e.toString());}
         return node;
+    }           
+            
+
+     
+    public int check_balancing(Node n)
+    {
+        try
+        {
+        int val1 = 0;
+        int val2 = 0;
+        if(n.left==null && n.right==null)
+        {return 1;}
+        if(n.left!=null)
+        {
+            val1 = check_balancing(n.left);            
+        }
+        if(n.right!=null)
+        {
+            val2 = check_balancing(n.right);            
+        }
+        
+        if(    Math.abs(val1 - val2) > 1   )
+        {balance_check_flag = 1;}
+        if(val1 > val2) return val1+1;
+        else return val2+1;
+        
+        }  catch(Exception e){System.out.println("test.BinaryTree.check_balancing() "+e.toString()+"  "+e.getCause());}
+        return 0;
     }
-            
-            
+
+
+
 }
-
-
-
 public class Trees {
-    
-    /* This function is in LinkedList class. Inserts a
-   new Node at front of the list. This method is 
-   defined inside LinkedList class shown above */
-    
-    
+
     public static void main(String[] args)
     {
         BinaryTree tree = new BinaryTree();
@@ -103,17 +134,25 @@ public class Trees {
         tree.root.left.left = new Node(25);
         tree.root.left.right = new Node(30);
         tree.root.right.left = new Node(36);
-        //tree.root.left.right.left = new Node(8);
-        //tree.root.left.right.left.left = new Node(5);
-        //tree.root.left.right.left.right = new Node(1);
-        BinaryTree.tree2listrecursion(tree.root);
+        tree.root.right.left.right = new Node(244);
+        tree.root.left.right.left = new Node(8);
+        tree.root.left.right.left.left = new Node(5);
+        tree.root.left.right.left.right = new Node(1);
         
+        tree.check_balancing(tree.root);
+        System.out.println("The status of balancing tree is "+tree.balance_check_flag);
+        
+        tree.btree2dll(tree.root);
+        try{
         while(true)
         {
-            System.out.println(BinaryTree.head.data+" ");
+            System.out.print(BinaryTree.head.data+" ");            
             BinaryTree.head = BinaryTree.head.right;
+            if(BinaryTree.head == null){break;}
             
         }
+        
+        }catch(Exception e){System.out.println("exception while printing "+e.toString());}
         
     }
 
