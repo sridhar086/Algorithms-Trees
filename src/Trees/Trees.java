@@ -209,7 +209,31 @@ class BinaryTree
             
     }
 
+    
+    
+    public boolean checkBST(Node root,int min, int max)
+    {
+        if(root == null)
+        {
+            return true;
+        }
+        else if (root.data < min || root.data > max)
+        {
+            return false;
+        }
+        else
+        {
+            return checkBST(root.left, min, root.data-1) && checkBST(root.right, min, root.data-1);
+           
+        }
+    }
+
+
 }
+
+
+
+
 public class Trees {
 
     public static void main(String[] args)
@@ -225,6 +249,10 @@ public class Trees {
         tree.root.left.right.left = new Node(8);
         tree.root.left.right.left.left = new Node(5);
         tree.root.left.right.left.right = new Node(1);
+        
+        System.out.println("check for BST "+tree.checkBST(tree.root, Integer.MIN_VALUE, Integer.MAX_VALUE));
+        
+        
         
         tree.check_balancing(tree.root);
         System.out.println("The status of balancing tree is "+tree.balance_check_flag);
@@ -243,8 +271,10 @@ public class Trees {
             if(BinaryTree.head == null){break;}
             
         }
+
         
         }catch(Exception e){System.out.println("exception while printing "+e.toString());}
+        
         
     }
 
